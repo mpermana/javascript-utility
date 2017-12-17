@@ -5,6 +5,16 @@ const testAuthorization = 'JWT e30=.eyJ1c2VyX2lkIjogMSwgImVtYWlsIjogIm1wZXJtYW5h
 const testAuthorizationUser2 = 'JWT e30=.eyJ1c2VyX2lkIjogMn0=.='
 myHeaders.append('Authorization', localStorage.getItem('authorization') || testAuthorization)
 
+const environment = window.location.search.match('environment=test') ? 'test' : 'production'
+myHeaders.append('database', environment)
+
+export const commonDelete = (collectionName, entity, callback) => {
+  if (confirm('Delete it?')) {
+    const url = `/rest/${collectionName}/${entity._id['$oid']}`
+    return fetchDelete(url).then(() => callback())
+  }
+}
+
 export function get(url, body) {
   return fetch(url, {
     method: 'GET',
